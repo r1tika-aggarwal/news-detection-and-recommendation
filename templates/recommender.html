@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>News Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles1.css') }}">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Find Your Next Read in Seconds!</h1>
+      <h2>Type Keywords and Access Articles That Fit your Interests.</h2>
+      <p>Uncover articles that align with what you care about. Enter you keywords and get a personalized selection of new stories. Your next great read is just a search away!</p>
+      <form method="post">
+        <div class="form-group">
+          <label for="keywords">Enter Keywords:</label>
+          <input type="text" class="form-control" id="keywords" name="keywords" required>
+        </div>
+        <div class="form-group">
+          <label for="num_articles">Number of Articles:</label>
+          <input type="number" class="form-control" id="num_articles" name="num_articles" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Get Recommendations</button>
+      </form>
+      <br>
+      {% if recommendations is not none %}
+        {% if recommendations %}
+          <h2>Recommendations</h2>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+            <li class="recommendation-item">
+              <p><strong>Date of the article published:</strong> {{ item.date }}</p>
+              <p><strong>Title of the article:</strong> {{ item.title }}</p>
+              <p><a href="{{ item.link }}" target="_blank">Check out the article here</a></p>
+            </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No articles found with the given keywords.</p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </body>
+</html>
+

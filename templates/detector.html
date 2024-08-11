@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fake News Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
+</head>
+<body>
+    <h1>Truth or Fiction? Find out now!</h1>
+    <h2>Paste your article and uncover the real story.</h2>
+    <form id="fakeNewsForm">
+        <label for="news_content">News Content:</label><br>
+        <textarea id="news_content" name="news_content" rows="4" cols="50"></textarea><br><br>
+        <input type="button" value="Check" onclick="checkFakeNews()">
+    </form>
+    <h2 class="down">Fake News Detection Result</h2>
+    <div id="fakeNewsResult"></div>
+
+    <script>
+        function checkFakeNews() {
+            const newsContent = document.getElementById('news_content').value;
+            fetch('/check_fake_news', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ news_content: newsContent })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const fakeNewsResultDiv = document.getElementById('fakeNewsResult');
+                fakeNewsResultDiv.innerHTML = '';
+                if (data.is_real_news !== undefined) {
+                    const p = document.createElement('p');
+                    p.textContent = `Real News: ${data.is_real_news ? 'Yes' : 'No'}`;
+                    fakeNewsResultDiv.appendChild(p);
+                } else {
+                    fakeNewsResultDiv.textContent = 'Unable to detect.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const fakeNewsResultDiv = document.getElementById('fakeNewsResult');
+                fakeNewsResultDiv.textContent = 'An error occurred while checking the news.';
+            });
+        }
+    </script>
+</body>
+</html>
